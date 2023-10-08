@@ -56,7 +56,7 @@
    ```
 3. Склонировать репозиторий в локальную папку
    ```bash
-   ╰─$ git clone https://github.com/thrashches/gpx_routes_backend.git src
+   ╰─$ git clone git@github.com/thrashches/gpx_routes.git src
    ```
    У Вас должна получиться следующая структура коталогов:
    ```bash

@@ -22,7 +22,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-ADD ./poetry.lock ./pyproject.toml ./
+ADD poetry.lock ./pyproject.toml ./
 
 RUN poetry config virtualenvs.create false \
     && poetry install --only main --no-root \
@@ -32,7 +32,7 @@ RUN poetry config virtualenvs.create false \
 COPY . .
 
 # add start.sh
-COPY ./start.sh .
+COPY start.sh .
 RUN chmod +x /usr/src/app/start.sh
 
 # add and run as non-root user
