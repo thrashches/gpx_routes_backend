@@ -1,0 +1,34 @@
+version: '3.9'
+name: "gpx_routes"
+
+services:
+
+  server:
+    &base-server
+      build:
+        context: ../../../gpx_routes_backend/backend_dev/gpx_dev
+      container_name: server
+      command: [ "bash", "start.sh" ]
+      ports:
+        - 8000:8000
+      volumes:
+        - ../gpx_dev:/usr/src/app
+  
+  server-local:
+    <<: *base-server
+    env_file:
+        - ../../../gpx_routes_backend/backend_dev/deploy/env_file/.env_app
+    depends_on:
+      - database
+
+
+  database:
+    container_name: database
+    env_file:
+        - ../../../gpx_routes_backend/backend_dev/deploy/env_file/.env_app
+    image: postgres:$PG_TAG
+    ports:
+      - 5432:5432
+    volumes:
+      - database:/var/lib/postgresql/data
+

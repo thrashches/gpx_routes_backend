@@ -1,0 +1,16 @@
+version: '3.9'
+name: "gpx_routes"
+
+services:
+  server:
+    extends:
+      file: docker-compose.base.yml
+      service: server-local
+
+  database:
+    extends:
+      file: docker-compose.base.yml
+      service: database
+
+volumes:
+  database:

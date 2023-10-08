@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "gpx-dev"
+version = "0.1.0"
+description = ""
+authors = ["v.kovalev <v.kovalev@smfox.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^4.2.6"
+djangorestframework = "^3.14.0"
+drf-yasg = "^1.21.7"
+psycopg2-binary = "^2.9.9"
+python-decouple = "^3.8"
+python-dotenv = "^1.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
