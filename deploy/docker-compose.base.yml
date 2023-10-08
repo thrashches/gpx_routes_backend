@@ -1,5 +1,5 @@
 version: '3.9'
-name: "gpx_routes"
+name: "gpx_routes_backend"
 
 services:
 
