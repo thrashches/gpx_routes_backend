@@ -10,9 +10,9 @@ urlpatterns = []
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="SmartFox API",
+        title="GPX API",
         default_version="v1",
-        description="SmartFox API Swagger & redoc documentation",
+        description="GPX API Swagger & redoc documentation",
         terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="admin@admin.com"),
         license=openapi.License(name="BSD License"),
