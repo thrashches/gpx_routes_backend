@@ -39,7 +39,6 @@
     ├── poetry.lock
     ├── pyproject.toml
     └── start.sh # Команды после старта контейнера
-
 ```
 
 <h3 style="text-align: center;">Запуск проекта локально</h3>
