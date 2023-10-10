@@ -1,7 +1,6 @@
 #!/bin/sh
 python manage.py migrate
-python manage.py createsuperuser --no-input
-# python manage.py collectstatic --clear --noinput
+
 if [[ $? -eq 0 ]]
 then
     echo "Starting app..."
