@@ -48,7 +48,10 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-LOCAL_APPS = ["api.apps.ApiConfig"]
+LOCAL_APPS = [
+    "api.apps.ApiConfig",
+    "users.apps.UsersConfig",
+]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
@@ -108,6 +111,8 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
+
+AUTH_USER_MODEL = 'users.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
