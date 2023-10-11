@@ -1,0 +1,13 @@
+gpx_dev/db.sqlite3
+
+.idea
+
+.DS_Store
+gpx_dev/.env
+
+deploy/.env
+deploy/env_file/.env_app
+
+__pycache__/
+*.py[cod]
+*.pyc

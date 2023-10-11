@@ -1,5 +1,5 @@
-from django.contrib.auth.base_user import BaseUserManager
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.utils import timezone
@@ -12,8 +12,7 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('Email field must be set')
         email = self.normalize_email(email)
-        username = nickname
-        user = self.model(email=email, username=nickname, nickname=nickname, **extra_fields)
+        user = self.model(email=email, nickname=nickname, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -30,24 +29,33 @@ class UserManager(BaseUserManager):
         return self.create_user(email, nickname, password, **extra_fields)
 
 
-class User(AbstractUser):
-    username_validator = UnicodeUsernameValidator()
+class User(AbstractBaseUser, PermissionsMixin):
+    nickname_validator = UnicodeUsernameValidator()
 
     email = models.EmailField(unique=True, blank=False, null=False)
     nickname = models.CharField(max_length=30,
         unique=True,
         blank=False,
         null=False,
-        help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
-        validators=[username_validator],
+        help_text="Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.",
+        validators=[nickname_validator],
                                 )
-    password = models.CharField(max_length=128)
     birthday = models.DateField(null=True, blank=True)
     weight = models.FloatField(null=True, blank=True)
     height = models.FloatField(null=True, blank=True)
+    first_name = models.CharField(max_length=150, blank=True)
+    last_name = models.CharField(max_length=150, blank=True)
+    is_staff = models.BooleanField(
+        default=False,
+        help_text="Designates whether the user can log into this admin site.",
+    )
+    is_active = models.BooleanField(
+        default=True,
+        help_text=
+            "Designates whether this user should be treated as active. "
+            "Unselect this instead of deleting accounts."
+    )
     date_joined = models.DateTimeField(default=timezone.now)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['nickname']
