@@ -31,33 +31,16 @@ class UserManager(BaseUserManager):
         return self.create_user(email, nickname, password, **extra_fields)
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractUser):
     nickname_validator = UnicodeUsernameValidator()
 
-    email = models.EmailField(unique=True, blank=False, null=False)
-    nickname = models.CharField(
-        max_length=30,
-        unique=True,
-        blank=False,
-        null=False,
-        help_text="Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.",
-        validators=[nickname_validator],
-    )
+    username = None
+
+    email = models.EmailField(unique=True, verbose_name="Email")
+    nickname = models.CharField(max_length=255, verbose_name="Nickname", unique=True)
     birthday = models.DateField(null=True, blank=True)
     weight = models.FloatField(null=True, blank=True)
     height = models.FloatField(null=True, blank=True)
-    first_name = models.CharField(max_length=150, blank=True)
-    last_name = models.CharField(max_length=150, blank=True)
-    is_staff = models.BooleanField(
-        default=False,
-        help_text="Designates whether the user can log into this admin site.",
-    )
-    is_active = models.BooleanField(
-        default=True,
-        help_text="Designates whether this user should be treated as active. "
-        "Unselect this instead of deleting accounts.",
-    )
-    date_joined = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["nickname"]
@@ -69,19 +52,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class FollowManager(models.Manager):
-    def active(self):
-        return self.filter(status=Follow.Status.ACTIVE)
-
-    def canceled(self):
-        return self.filter(status=Follow.Status.CANCELED)
+    pass
 
 
 class Follow(models.Model):
     """Model to represent Following relationships"""
-
-    class Status(models.IntegerChoices):
-        CANCELED = 0, "Неактивна"
-        ACTIVE = 1, "Активна"
 
     follower = models.ForeignKey(
         AUTH_USER_MODEL, related_name="following", on_delete=models.CASCADE
@@ -90,17 +65,17 @@ class Follow(models.Model):
         AUTH_USER_MODEL, related_name="followers", on_delete=models.CASCADE
     )
     created = models.DateTimeField(auto_now_add=True)
-    status = models.BooleanField(choices=Status.choices, default=Status.ACTIVE)
 
     objects = FollowManager()
 
     class Meta:
         verbose_name = "Following Relation"
         verbose_name_plural = "Following Relationships"
-        unique_together = (
-            "follower",
-            "followee",
-        )
+        constraints = [
+            models.UniqueConstraint(
+                fields=("follower", "followee"), name="unique_follow"
+            )
+        ]
 
     def __str__(self):
         return f"User #{self.follower} follows #{self.followee}"

@@ -11,3 +11,5 @@ deploy/env_file/.env_app
 __pycache__/
 *.py[cod]
 *.pyc
+
+venv2

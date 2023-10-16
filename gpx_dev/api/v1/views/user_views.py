@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
@@ -79,15 +80,16 @@ class UserViewSet(viewsets.ModelViewSet):
                 {"error": "You can't subscribe yourself"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
-        if Follow.objects.filter(follower=follower, followee=user_to_follow).exists():
+        existing_follow = Follow.objects.filter(
+            follower=follower, followee=user_to_follow
+        ).first()
+        if existing_follow:
             return Response(
                 {"error": "Already following"}, status=status.HTTP_400_BAD_REQUEST
             )
-
         Follow.objects.create(follower=follower, followee=user_to_follow)
         return Response(
-            {"status": f"Subscribed from {user_to_follow.nickname}"},
+            {"success": f"Subscribed to {user_to_follow.nickname}"},
             status=status.HTTP_201_CREATED,
         )
 
@@ -106,14 +108,12 @@ class UserViewSet(viewsets.ModelViewSet):
             follow_relation = Follow.objects.get(
                 follower=follower,
                 followee=user_to_unfollow,
-                status=Follow.Status.ACTIVE,
             )
-        except Follow.DoesNotExists:
+        except ObjectDoesNotExist:
             return Response(
                 {"error": "You are not following this user"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        follow_relation.status = Follow.Status.CANCELED
-        follow_relation.save()
+        follow_relation.delete()
 
         return Response({"success": f"Unsubscribed from {user_to_unfollow.nickname}"})

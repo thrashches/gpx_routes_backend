@@ -4,39 +4,56 @@
 ---
 
 ### Структура проекта
-```output
-╰─$
-├── .gitignore
+```
+.
 ├── Makefile
 ├── README.md
-├── deploy # Сборка проекта
-│   ├── docker-compose.base.yml # Базовый docker-compose для сборки
-│   ├── docker-compose.local.yml # Сборка и запуск приложения в локальном окружении 
-│        └── .env_app # Переменные для docker-compose service: server-local и database
+├── deploy
+│   ├── docker-compose.base.yml # Базовый docker-compose для сборки
+│   ├── docker-compose.local.yml # Сборка и запуск приложения в локальном окружении 
+│   └── env_file # Переменные для docker-compose service: server-local и database
 └── gpx_dev
     ├── Dockerfile
-    ├── __init__.py
     ├── api
-    │    ├── __init__.py
-    │    ├── admin.py
-    │    ├── apps.py
-    │    ├── models.py
-    │    ├── tests.py
-    │    └── v1
-    │       ├── __init__.py
-    │       ├── urls.py
-    │       └── views.py
-    ├── gpx_routes_backend # Ядро проекта
-    │    ├── __init__.py
-    │    ├── asgi.py
-    │    ├── settings.py
-    │    ├── urls.py
-    │    └── wsgi.py
+    │   ├── __init__.py
+    │   ├── admin.py
+    │   ├── apps.py
+    │   └── v1
+    │       ├── __init__.py
+    │       ├── serializers
+    │       │   ├── __init__.py
+    │       │   └── user_serializers.py
+    │       ├── test_api
+    │       │   ├── __init__.py
+    │       │   └── test_user_api.py
+    │       ├── urls.py
+    │       └── views
+    │           ├── __init__.py
+    │           └── user_views.py
+    ├── db.sqlite3
+    ├── gpx_routes_backend  # Ядро проекта
+    │   ├── __init__.py
+    │   ├── asgi.py
+    │   ├── settings.py
+    │   ├── urls.py
+    │   └── wsgi.py
     ├── manage.py
     ├── poetry.lock
     ├── pyproject.toml
-    └── start.sh # Команды после старта контейнера 
-   ```
+    ├── start.sh    # Команды после старта контейнера
+    └── users
+        ├── __init__.py
+        ├── admin.py
+        ├── apps.py
+        ├── migrations
+        │   ├── 0001_initial.py
+        │   ├── 0002_follow.py
+        │   ├── 0003_alter_user_options_alter_follow_unique_together_and_more.py
+        │ └── __init__.py
+        ├── models.py
+        ├── tests.py
+        └── views.py
+```
 
 ### Запуск проекта локально
 

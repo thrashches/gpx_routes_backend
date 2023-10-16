@@ -68,8 +68,7 @@ class FollowTestCase(TestCase):
         follow = Follow.objects.create(follower=self.user1, followee=self.user2)
         self.assertEqual(follow.follower, self.user1)
         self.assertEqual(follow.followee, self.user2)
-        self.assertIsNotNone(follow.created)
-        self.assertEqual(follow.status, Follow.Status.ACTIVE)
+        self.assertIsNotNone(follow.pk)
 
     def test_unique_follow(self):
         Follow.objects.create(follower=self.user1, followee=self.user2)
@@ -77,26 +76,9 @@ class FollowTestCase(TestCase):
         with self.assertRaises(IntegrityError):
             Follow.objects.create(follower=self.user1, followee=self.user2)
 
-    def test_follow_manager_active(self):
-        Follow.objects.create(
-            follower=self.user1, followee=self.user2, status=Follow.Status.ACTIVE
-        )
-        self.assertEqual(Follow.objects.active().count(), 1)
-
-    def test_follow_manager_canceled(self):
-        Follow.objects.create(
-            follower=self.user1, followee=self.user2, status=Follow.Status.CANCELED
-        )
-        self.assertEqual(Follow.objects.canceled().count(), 1)
-
     def test_cancel_follow(self):
         follow = Follow.objects.create(follower=self.user1, followee=self.user2)
+        self.assertIsNotNone(Follow.objects.first())
 
-        self.assertEqual(follow.status, Follow.Status.ACTIVE)
-
-        follow.status = Follow.Status.CANCELED
-        follow.save()
-
-        self.assertEqual(
-            Follow.objects.get(id=follow.id).status, Follow.Status.CANCELED
-        )
+        follow.delete()
+        self.assertIsNone(Follow.objects.first())
