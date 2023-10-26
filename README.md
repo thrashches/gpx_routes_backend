@@ -1,64 +1,78 @@
 
-<h2 style="text-align: center;">GPX Project</h2>
+## GPX Project
 
 ---
 
-<h3 style="text-align: center;">Структура проекта</h3>
-```bash
-╰─$
-├── .gitignore
+### Структура проекта
+```
+.
 ├── Makefile
 ├── README.md
-├── deploy # Сборка проекта
-│   ├── .env # Переменные для docker-compose engine
-│   ├── docker-compose.base.yml # Базовый docker-compose для сборки
-│   ├── docker-compose.local.yml # Сборка и запуск приложения в локальном окружении 
-│   └── env_file
-│        └── .env_app # Переменные для docker-compose service: server-local и database
+├── deploy
+│   ├── docker-compose.base.yml # Базовый docker-compose для сборки
+│   ├── docker-compose.local.yml # Сборка и запуск приложения в локальном окружении 
+│   └── env_file # Переменные для docker-compose service: server-local и database
 └── gpx_dev
-    ├── .env
     ├── Dockerfile
-    ├── __init__.py
     ├── api
-    │    ├── __init__.py
-    │    ├── admin.py
-    │    ├── apps.py
-    │    ├── models.py
-    │    ├── tests.py
-    │    └── v1
-    │       ├── __init__.py
-    │       ├── urls.py
-    │       └── views.py
-    ├── core # Ядро проекта
-    │    ├── __init__.py
-    │    ├── asgi.py
-    │    ├── settings.py
-    │    ├── urls.py
-    │    └── wsgi.py
+    │   ├── __init__.py
+    │   ├── admin.py
+    │   ├── apps.py
+    │   └── v1
+    │       ├── __init__.py
+    │       ├── serializers
+    │       │   ├── __init__.py
+    │       │   └── user_serializers.py
+    │       ├── test_api
+    │       │   ├── __init__.py
+    │       │   └── test_user_api.py
+    │       ├── urls.py
+    │       └── views
+    │           ├── __init__.py
+    │           └── user_views.py
+    ├── db.sqlite3
+    ├── gpx_routes_backend  # Ядро проекта
+    │   ├── __init__.py
+    │   ├── asgi.py
+    │   ├── settings.py
+    │   ├── urls.py
+    │   └── wsgi.py
     ├── manage.py
     ├── poetry.lock
     ├── pyproject.toml
-    └── start.sh # Команды после старта контейнера
+    ├── start.sh    # Команды после старта контейнера
+    └── users
+        ├── __init__.py
+        ├── admin.py
+        ├── apps.py
+        ├── migrations
+        │   ├── 0001_initial.py
+        │   ├── 0002_follow.py
+        │   ├── 0003_alter_user_options_alter_follow_unique_together_and_more.py
+        │ └── __init__.py
+        ├── models.py
+        ├── tests.py
+        └── views.py
 ```
 
-<h3 style="text-align: center;">Запуск проекта локально</h3>
+### Запуск проекта локально
 
 Для запуска проекта локально необходимо:
 1. Если необходимо, создайте папку куда будет склонирован проект, перейти в созданную папку:
-   ```bash
+   ```output
    ╰─$ mkdir <name dir>
    ╰─$ cd <name dir> # created in the previous step 
    ```
 2. В текущей папке создать виртуальное окружение:
-   ```bash
+   ```output
     ╰─$ python3.11 -m venv .
    ```
 3. Склонировать репозиторий в локальную папку
-   ```bash
+   ```output
    ╰─$ git clone git@github.com/thrashches/gpx_routes_backend.git src
    ```
    У Вас должна получиться следующая структура коталогов:
-   ```bash
+   ```output
     ╰─$
     ├── bin
     ├── include
@@ -67,7 +81,7 @@
     └── src
    ```
 4. Активируйте виртуальное окружение, выполнив команду:
-   ```bash
+   ```output
    ╰─$ source ./bin/activate
    ```
    После выполнения команды, отображение приглашения измениться:
@@ -75,30 +89,29 @@
    (<name venv>)╰─$
    ```
 5. Перейдите в директорию `src` выполнив команду:
-   ```bash
+   ```output
    (<name venv>)╰─$ cd src
    ```
    Структура директории:
-   ```Output
+   ```output
     ├── .dockerignore
     ├── .env
     ├── .git
     ├── .gitignore
     ├── Makefile
     ├── README.md
-    ├── docker-compose-dev.yml
-    ├── env_file
-    └── smartfact_dev
+    ├── deploy
+    └── gpx_routes_backend
    ```
 6. Перейдите в директорию `gpx_dev` выполнив команду:
     ```bash
    (<name venv>)╰─$ cd gpx_dev
    ```
     Структура директории:
-   ```Output
+   ```output
     ├── Dockerfile
     ├── api
-    ├── core
+    ├── gpx_routes_backend
     ├── manage.py
     ├── poetry.lock
     ├── pyproject.toml
@@ -106,17 +119,17 @@
    ```
 
 7. Выполните комманду `poetry install`:
-   >Warning:<br>
+   >Warning:
    >---
    >Убедитесь, что у Вас установлен poetry `╰─$ poetry --version`
 
-    ```bash
+    ```output
    (<name venv>)╰─$ poetry install
    ```
 
-   >Note:<br>
+   >Note:  
    >После установки всех пакетов локально, можно проверить что сервер запускается корректно:
-   >```bash
+   >```output
    >(<name venv>)╰─$ python manage.py runserver
    >```
 
@@ -126,7 +139,7 @@
     ```
     (<name venv>)╰─$ cd ..
     ```
-    - Убедитесь, что находитесь в дериктории с файлами:
+    - Убедитесь, что находитесь в директории с файлами:
     ```Output
     ├── .gitignore
     ├── Makefile
@@ -138,29 +151,40 @@
     ```
     (<name venv>)╰─$ make start-local
     ```
-    После скачивания необходимых образов, установки пакетов, проект запуститься в контейнерах.
+    После скачивания необходимых образов, установки пакетов, проект запустится в контейнерах.
 
     Для проверки корректрной установки и доступности проекта в браузере перейдите по ссылке:
     `http://localhost:8000/` либо `http://0.0.0.0:8000/`
 
     Отобразится стартовая страница Django Project
 
-NOTE:<br>
+NOTE:
 ---
-Admin User for Admin pannel:
-   * Login: admin
-   * Password: 1234
+Для запуска через docker-compose необходимо в директории deploy:
+ - создать файл .env и в нем определить переменную `PG_TAG` - версия POSTGRES,
+например `PG_TAG=15.2`
+ - создать каталог `env_file`,  внутри которого необходимо создать файл с именем `.env_app`
+ - в `.env_app` необходимо задать следующие переменные:
+   - `DB_ENGINE`=django.db.backends.postgresql - 
+   - `DB_NAME` - имя базы данных
+   - `DB_USER` - имя пользователя БД
+   - `DB_PASSWORD` - Пароль для БД
+   - `DB_HOST` - Хост, на котором работает ваша БД
+   - `DB_PORT` - Порт, на котором работает ваша БД
+   - `POSTGRES_PASSWORD` - Пароль для БД, рекомендуется такой же как `DB_PASSWORD`
+   - `SECRET_KEY` - секретный ключ Django
+   - `ALLOWED_HOSTS` - в режиме `DEBUG=True` добавит `['localhost', '127.0.0.1', '[::1]']`
+   - `DJANGO_SUPERUSER_USERNAME` Пример admin
+   - `DJANGO_SUPERUSER_PASSWORD` 
+   - `DJANGO_SUPERUSER_EMAIL` admin@admin.com
+   - `DEBUG` - в режиме отладки `True`
 
-Определён в файле `/env_file/.env_app`
-
-DJANGO_SUPERUSER_USERNAME=admin<br>
-DJANGO_SUPERUSER_PASSWORD=1234<br>
-DJANGO_SUPERUSER_EMAIL="admin@admin.com"<br>
 
 Доступные команды:
 ```
-make start-local # Запуск проекта в локальном окружении
+make start-local # Запуск проекта в локальном окружении в контейнерах 
 make down-local # Остановка проект и удаление volume
 make logs-local # Просмотр логов в консоли
 make test # Запуск тестов (В разработке)  
+python manage.py runserver # Запуск проекта в режиме разработки(НЕ для production)
 ```
